@@ -1,2 +1,0 @@
-- [x] Make the email in contact section a clickable mailto link
-- [ ] Test the link by running the development server
