@@ -1,0 +1,213 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+
+export default function CustomCursor() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [cursorVariant, setCursorVariant] = useState("default")
+  const [isVisible, setIsVisible] = useState(false)
+  const [trailPositions, setTrailPositions] = useState<{ x: number; y: number }[]>([])
+
+  useEffect(() => {
+    // Show cursor after a short delay to prevent initial position jump
+    const timer = setTimeout(() => setIsVisible(true), 1000)
+
+    const mouseMove = (e: MouseEvent) => {
+      const newPosition = {
+        x: e.clientX,
+        y: e.clientY,
+      }
+
+      setMousePosition(newPosition)
+
+      // Update trail positions
+      setTrailPositions((prev) => {
+        const newTrail = [newPosition, ...prev.slice(0, 5)]
+        return newTrail
+      })
+    }
+
+    const mouseDown = () => setCursorVariant("click")
+    const mouseUp = () => setCursorVariant("default")
+
+    const handleLinkHover = () => setCursorVariant("hover")
+    const handleButtonHover = () => setCursorVariant("button")
+    const handleLinkLeave = () => setCursorVariant("default")
+
+    window.addEventListener("mousemove", mouseMove)
+    window.addEventListener("mousedown", mouseDown)
+    window.addEventListener("mouseup", mouseUp)
+
+    // Add event listeners to all interactive elements
+    const links = document.querySelectorAll('a, [role="link"]')
+    const buttons = document.querySelectorAll('button, [role="button"], input[type="button"], input[type="submit"]')
+    const inputs = document.querySelectorAll('input:not([type="button"]):not([type="submit"]), textarea, select')
+
+    links.forEach((el) => {
+      el.addEventListener("mouseenter", handleLinkHover)
+      el.addEventListener("mouseleave", handleLinkLeave)
+    })
+
+    buttons.forEach((el) => {
+      el.addEventListener("mouseenter", handleButtonHover)
+      el.addEventListener("mouseleave", handleLinkLeave)
+    })
+
+    inputs.forEach((el) => {
+      el.addEventListener("mouseenter", handleLinkHover)
+      el.addEventListener("mouseleave", handleLinkLeave)
+    })
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener("mousemove", mouseMove)
+      window.removeEventListener("mousedown", mouseDown)
+      window.removeEventListener("mouseup", mouseUp)
+
+      links.forEach((el) => {
+        el.removeEventListener("mouseenter", handleLinkHover)
+        el.removeEventListener("mouseleave", handleLinkLeave)
+      })
+
+      buttons.forEach((el) => {
+        el.removeEventListener("mouseenter", handleButtonHover)
+        el.removeEventListener("mouseleave", handleLinkLeave)
+      })
+
+      inputs.forEach((el) => {
+        el.removeEventListener("mouseenter", handleLinkHover)
+        el.removeEventListener("mouseleave", handleLinkLeave)
+      })
+    }
+  }, [])
+
+  // Cursor variants for different states
+  const variants = {
+    default: {
+      x: mousePosition.x - 16,
+      y: mousePosition.y - 16,
+      height: 32,
+      width: 32,
+      backgroundColor: "rgba(156, 39, 176, 0)",
+      border: "2px solid rgba(156, 39, 176, 0.5)",
+      mixBlendMode: "difference" as const,
+    },
+    hover: {
+      x: mousePosition.x - 24,
+      y: mousePosition.y - 24,
+      height: 48,
+      width: 48,
+      backgroundColor: "rgba(233, 30, 99, 0)",
+      border: "2px solid rgba(233, 30, 99, 0.8)",
+      mixBlendMode: "difference" as const,
+    },
+    button: {
+      x: mousePosition.x - 32,
+      y: mousePosition.y - 32,
+      height: 64,
+      width: 64,
+      backgroundColor: "rgba(156, 39, 176, 0.1)",
+      border: "2px solid rgba(156, 39, 176, 0.8)",
+      mixBlendMode: "normal" as const,
+    },
+    click: {
+      x: mousePosition.x - 16,
+      y: mousePosition.y - 16,
+      height: 32,
+      width: 32,
+      backgroundColor: "rgba(233, 30, 99, 0.4)",
+      border: "2px solid rgba(233, 30, 99, 0)",
+      mixBlendMode: "normal" as const,
+    },
+  }
+
+  // Cursor dot variants
+  const dotVariants = {
+    default: {
+      x: mousePosition.x - 4,
+      y: mousePosition.y - 4,
+      height: 8,
+      width: 8,
+      backgroundColor: "rgba(156, 39, 176, 0.8)",
+    },
+    hover: {
+      x: mousePosition.x - 4,
+      y: mousePosition.y - 4,
+      height: 8,
+      width: 8,
+      backgroundColor: "rgba(233, 30, 99, 0.8)",
+    },
+    button: {
+      x: mousePosition.x - 6,
+      y: mousePosition.y - 6,
+      height: 12,
+      width: 12,
+      backgroundColor: "rgba(156, 39, 176, 1)",
+    },
+    click: {
+      x: mousePosition.x - 8,
+      y: mousePosition.y - 8,
+      height: 16,
+      width: 16,
+      backgroundColor: "rgba(233, 30, 99, 1)",
+    },
+  }
+
+  // Only show on non-touch devices
+  if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+    return null
+  }
+
+  if (!isVisible) return null
+
+  return (
+    <>
+      {/* Cursor trails */}
+      {trailPositions.map((pos, i) => (
+        <motion.div
+          key={i}
+          className="fixed top-0 left-0 rounded-full pointer-events-none z-50"
+          animate={{
+            x: pos.x - 3,
+            y: pos.y - 3,
+            opacity: 1 - i * 0.15,
+            scale: 1 - i * 0.1,
+          }}
+          transition={{ duration: 0 }}
+          style={{
+            width: 6,
+            height: 6,
+            backgroundColor: `rgba(156, 39, 176, ${0.5 - i * 0.08})`,
+          }}
+        />
+      ))}
+
+      {/* Main cursor dot */}
+      <motion.div
+        className="cursor-dot fixed top-0 left-0 rounded-full pointer-events-none z-50"
+        variants={dotVariants}
+        animate={cursorVariant}
+        transition={{
+          type: "spring",
+          damping: 25,
+          stiffness: 300,
+          mass: 0.5,
+        }}
+      />
+
+      {/* Cursor ring */}
+      <motion.div
+        className="cursor fixed top-0 left-0 rounded-full pointer-events-none z-50"
+        variants={variants}
+        animate={cursorVariant}
+        transition={{
+          type: "spring",
+          damping: 30,
+          stiffness: 200,
+          mass: 0.8,
+        }}
+      />
+    </>
+  )
+}
