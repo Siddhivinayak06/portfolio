@@ -81,6 +81,13 @@ export default function Hero() {
     }
   }
 
+  const scrollToProjects = () => {
+    const projectsSection = document.getElementById("projects")
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
     <section id="home" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Wave patterns background */}
@@ -359,6 +366,7 @@ export default function Hero() {
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white border-0 shadow-md hover:shadow-lg transition-all duration-300 group"
+                onClick={scrollToProjects}
               >
                 View My Work
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -371,7 +379,7 @@ export default function Hero() {
               >
                 <a href="/cv.pdf" download="CV.pdf" className="inline-flex items-center">
                   <Download className="h-4 w-4 mr-2" />
-                  Download CV
+                  Download Resume
                 </a>
               </Button>
             </motion.div>
@@ -395,7 +403,7 @@ export default function Hero() {
                 <Linkedin className="h-5 w-5" />
               </MagneticIcon>
               <MagneticIcon
-                href="mailto:contact@example.com"
+                href="mailto:siddhivinyaksawant04@gmail.com"
                 className="bg-gray-100 dark:bg-gray-800 p-3 rounded-full text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
               >
                 <Mail className="h-5 w-5" />

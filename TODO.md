@@ -1,0 +1,3 @@
+- [x] Add id="projects" to the projects section in app/page.tsx
+- [x] Add scrollToProjects function in hero.tsx
+- [x] Add onClick handler to "View My Work" button in hero.tsx to call scrollToProjects

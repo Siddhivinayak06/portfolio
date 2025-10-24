@@ -63,19 +63,19 @@ export default function About() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <motion.div
-            className="relative h-80 md:h-96 rounded-lg overflow-hidden shadow-2xl"
+            className="relative h-[28rem] md:h-[28rem] w-96 md:w-[34rem] rounded-lg overflow-hidden shadow-2xl"
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-600/20 z-10"></div>
+            <div className="absolute inset-0 "></div>
             <motion.div
               initial={{ scale: 1.2 }}
               animate={isInView ? { scale: 1 } : { scale: 1.2 }}
               transition={{ duration: 1.5 }}
               className="w-full h-full"
             >
-              <Image src="/placeholder.svg?height=400&width=400" alt="Profile" fill className="object-cover" />
+              <Image src="/images/Profile.png" alt="Profile" fill className="object-cover" />
             </motion.div>
           </motion.div>
 

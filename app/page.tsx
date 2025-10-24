@@ -7,6 +7,7 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import Loader from "@/components/loader"
 import CustomCursor from "@/components/custom-cursor"
+import { Card3D } from "@/components/3d-card"
 
 export default function Home() {
   return (
@@ -29,7 +30,7 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section className="bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+      <section id="projects" className="bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
         <Projects />
       </section>
 
