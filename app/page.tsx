@@ -7,7 +7,7 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import Loader from "@/components/loader"
 import CustomCursor from "@/components/custom-cursor"
-import { Card3D } from "@/components/3d-card"
+
 
 export default function Home() {
   return (
