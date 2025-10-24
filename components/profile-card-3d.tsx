@@ -122,7 +122,7 @@ export default function ProfileCard3D({ className = "" }: ProfileCard3DProps) {
           <div className="relative w-full h-full">
             <div className="relative w-full h-full p-0 flex items-center justify-center z-10 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 rounded-3xl overflow-hidden">
               <Image
-                src="/images/profile.png"
+                src="/images/Profile.png"
                 alt="Profile"
                 fill
                 className="object-cover"
@@ -167,7 +167,7 @@ export default function ProfileCard3D({ className = "" }: ProfileCard3DProps) {
             {/* Header */}
             <div className="text-center">
               <div className="relative w-20 h-20 mx-auto mb-2 rounded-full overflow-hidden border-2 border-white/50 shadow-lg">
-                <Image src="/images/profile.png" alt="Profile" fill className="object-cover" />
+                <Image src="/images/Profile.png" alt="Profile" fill className="object-cover" />
               </div>
               <h3 className="text-xl font-bold text-white mb-1">Siddhivinayak Sawant</h3>
               <p className="text-teal-100 text-sm font-semibold flex items-center justify-center gap-1">
