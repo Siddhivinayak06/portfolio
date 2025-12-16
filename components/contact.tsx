@@ -9,6 +9,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react"
 import { motion, useInView } from "framer-motion"
 import WaveBackground from "./wave-background"
 import emailjs from '@emailjs/browser'
+import { saveMessage } from "@/lib/actions"
 
 // Magnetic icon component
 const MagneticIcon = ({ children, className }: { children: React.ReactNode; className?: string }) => {
@@ -74,6 +75,28 @@ export default function Contact() {
     e.preventDefault()
     setIsSubmitting(true)
 
+    // Check if env vars are configured
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+    // Simple validation to check if they are dummy values or missing
+    const isConfigured =
+      serviceId && !serviceId.includes("service_123") &&
+      templateId && !templateId.includes("template_123") &&
+      publicKey
+
+    if (!isConfigured) {
+      // Fallback behavior
+      console.warn("EmailJS not configured. Falling back to mailto.")
+      window.location.href = `mailto:siddhivinayaksawant04@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)}`
+      setIsSubmitting(false)
+      setSubmitStatus("success") // Visually indicate "sent" (opened mail client)
+      setFormData({ name: "", email: "", subject: "", message: "" })
+      setTimeout(() => setSubmitStatus(null), 5000)
+      return
+    }
+
     try {
       const templateParams = {
         from_name: formData.name,
@@ -84,11 +107,14 @@ export default function Contact() {
       }
 
       await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        serviceId,
+        templateId,
         templateParams,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+        publicKey
       )
+
+      // Persist to database
+      await saveMessage(formData)
 
       setSubmitStatus("success")
       setFormData({ name: "", email: "", subject: "", message: "" })
@@ -118,7 +144,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="relative py-20 bg-gradient-to-b from-gray-50 to-white" ref={ref}>
+    <section id="contact" className="relative py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900" ref={ref}>
       <WaveBackground
         sectionId="contact"
         color1="rgba(126, 34, 206, 0.08)"
@@ -135,9 +161,9 @@ export default function Contact() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">Get In Touch</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">Get In Touch</h2>
           <div className="mt-4 h-1 w-24 bg-gradient-to-r from-purple-500 to-pink-600 mx-auto rounded"></div>
-          <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="mt-6 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Have a project in mind or want to discuss potential opportunities? Feel free to reach out!
           </p>
         </motion.div>
@@ -145,43 +171,43 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <motion.div variants={containerVariants} initial="hidden" animate={isInView ? "visible" : "hidden"}>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">Contact Information</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Contact Information</h3>
             <div className="space-y-6">
               <motion.div className="flex items-start" variants={itemVariants}>
-                <MagneticIcon className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
-                  <Mail className="h-6 w-6 text-purple-600" />
+                <MagneticIcon className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4">
+                  <Mail className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </MagneticIcon>
                 <div>
-                  <h4 className="text-lg font-medium text-gray-900">Email</h4>
-                  <a href="mailto:siddhivinayaksawant04@gmail.com" className="text-gray-600 hover:text-purple-600 transition-colors duration-300">
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-white">Email</h4>
+                  <a href="mailto:siddhivinayaksawant04@gmail.com" className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">
                     siddhivinayaksawant04@gmail.com
                   </a>
                 </div>
               </motion.div>
 
               <motion.div className="flex items-start" variants={itemVariants}>
-                <MagneticIcon className="h-12 w-12 rounded-full bg-pink-100 flex items-center justify-center mr-4">
-                  <Phone className="h-6 w-6 text-pink-600" />
+                <MagneticIcon className="h-12 w-12 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mr-4">
+                  <Phone className="h-6 w-6 text-pink-600 dark:text-pink-400" />
                 </MagneticIcon>
                 <div>
-                  <h4 className="text-lg font-medium text-gray-900">Phone</h4>
-                  <p className="text-gray-600">+91 7977209104</p>
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-white">Phone</h4>
+                  <p className="text-gray-600 dark:text-gray-300">+91 7977209104</p>
                 </div>
               </motion.div>
 
               <motion.div className="flex items-start" variants={itemVariants}>
-                <MagneticIcon className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
-                  <MapPin className="h-6 w-6 text-purple-600" />
+                <MagneticIcon className="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4">
+                  <MapPin className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </MagneticIcon>
                 <div>
-                  <h4 className="text-lg font-medium text-gray-900">Location</h4>
-                  <p className="text-gray-600">Thane, Maharashtra</p>
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-white">Location</h4>
+                  <p className="text-gray-600 dark:text-gray-300">Thane, Maharashtra</p>
                 </div>
               </motion.div>
             </div>
 
             <motion.div className="mt-12" variants={itemVariants}>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-6">Follow Me</h3>
+              <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Follow Me</h3>
               <div className="flex space-x-4">
                 <MagneticIcon className="h-12 w-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1">
                   <a href="https://www.linkedin.com/in/siddhivinayaksawant" className="text-white">
@@ -217,10 +243,10 @@ export default function Contact() {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-2xl font-semibold text-gray-900 mb-6">Send Me a Message</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Send Me a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="group">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Name
                 </label>
                 <Input
@@ -230,12 +256,12 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="Your name"
-                  className="border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-300"
+                  className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-purple-500 focus:ring focus:ring-purple-200 dark:focus:ring-purple-900 transition-all duration-300"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email
                 </label>
                 <Input
@@ -246,12 +272,12 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="Your email"
-                  className="border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-300"
+                  className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-purple-500 focus:ring focus:ring-purple-200 dark:focus:ring-purple-900 transition-all duration-300"
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Subject
                 </label>
                 <Input
@@ -261,12 +287,12 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   placeholder="Subject"
-                  className="border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-300"
+                  className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-purple-500 focus:ring focus:ring-purple-200 dark:focus:ring-purple-900 transition-all duration-300"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Message
                 </label>
                 <Textarea
@@ -277,7 +303,7 @@ export default function Contact() {
                   required
                   placeholder="Your message"
                   rows={5}
-                  className="border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-300"
+                  className="border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:border-purple-500 focus:ring focus:ring-purple-200 dark:focus:ring-purple-900 transition-all duration-300"
                 />
               </div>
 

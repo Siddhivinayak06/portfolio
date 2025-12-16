@@ -36,7 +36,7 @@ export default function About() {
   ]
 
   return (
-    <section id="about" className="relative py-20 bg-gradient-to-b from-gray-50 to-white" ref={ref}>
+    <section id="about" className="relative py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900" ref={ref}>
       <WaveBackground
         sectionId="about"
         color1="rgba(126, 34, 206, 0.1)"
@@ -52,7 +52,7 @@ export default function About() {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
-          <motion.h2 className="text-3xl font-bold text-gray-900 sm:text-4xl" variants={itemVariants}>
+          <motion.h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl" variants={itemVariants}>
             About Me
           </motion.h2>
           <motion.div
@@ -84,14 +84,14 @@ export default function About() {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
             transition={{ duration: 0.8 }}
           >
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">Who I Am</h3>
-            <p className="text-gray-600 mb-6">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Who I Am</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               I’m a Full Stack Developer driven by the art of transforming ideas into impactful digital experiences. With years of experience in modern web technologies and a background in computer science, I focus on building responsive, accessible, and high-performing applications that users love.
             </p>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               My development philosophy revolves around clean architecture, maintainable code, and continuous learning. I enjoy collaborating with teams to build meaningful products that solve real-world problems and deliver lasting value.
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Beyond the screen, I spend my time hiking, reading tech blogs, and experimenting with emerging technologies to stay inspired and innovative.
             </p>
 
@@ -101,7 +101,7 @@ export default function About() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">My Expertise</h3>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 text-center">My Expertise</h3>
               <div className="grid grid-cols-3 gap-4 mt-4">
                 {expertiseAreas.map((area, index) => (
                   <motion.div
@@ -111,7 +111,7 @@ export default function About() {
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   >
                     <div
-                      className="flex items-center justify-center w-12 h-12 rounded-full mb-2 transition-all duration-300 group-hover:shadow-lg"
+                      className="flex items-center justify-center w-12 h-12 rounded-full mb-2 transition-all duration-300 group-hover:shadow-lg dark:bg-gray-800"
                       style={{
                         backgroundColor: `${area.color}20`,
                         color: area.color,
@@ -119,7 +119,7 @@ export default function About() {
                     >
                       {area.icon}
                     </div>
-                    <span className="text-sm text-gray-600">{area.label}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{area.label}</span>
                   </motion.div>
                 ))}
               </div>

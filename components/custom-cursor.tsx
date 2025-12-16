@@ -10,8 +10,8 @@ export default function CustomCursor() {
   const [trailPositions, setTrailPositions] = useState<{ x: number; y: number }[]>([])
 
   useEffect(() => {
-    // Show cursor after a short delay to prevent initial position jump
-    const timer = setTimeout(() => setIsVisible(true), 1000)
+    // Show cursor immediately
+    setIsVisible(true)
 
     const mouseMove = (e: MouseEvent) => {
       const newPosition = {
@@ -60,7 +60,6 @@ export default function CustomCursor() {
     })
 
     return () => {
-      clearTimeout(timer)
       window.removeEventListener("mousemove", mouseMove)
       window.removeEventListener("mousedown", mouseDown)
       window.removeEventListener("mouseup", mouseUp)
@@ -89,36 +88,32 @@ export default function CustomCursor() {
       y: mousePosition.y - 16,
       height: 32,
       width: 32,
-      backgroundColor: "rgba(156, 39, 176, 0)",
-      border: "2px solid rgba(156, 39, 176, 0.5)",
-      mixBlendMode: "difference" as const,
+      backgroundColor: "rgba(147, 51, 234, 0)", // transparent purple
+      border: "2px solid rgba(147, 51, 234, 0.5)",
     },
     hover: {
       x: mousePosition.x - 24,
       y: mousePosition.y - 24,
       height: 48,
       width: 48,
-      backgroundColor: "rgba(233, 30, 99, 0)",
-      border: "2px solid rgba(233, 30, 99, 0.8)",
-      mixBlendMode: "difference" as const,
+      backgroundColor: "rgba(236, 72, 153, 0)", // transparent pink
+      border: "2px solid rgba(236, 72, 153, 0.8)",
     },
     button: {
       x: mousePosition.x - 32,
       y: mousePosition.y - 32,
       height: 64,
       width: 64,
-      backgroundColor: "rgba(156, 39, 176, 0.1)",
-      border: "2px solid rgba(156, 39, 176, 0.8)",
-      mixBlendMode: "normal" as const,
+      backgroundColor: "rgba(147, 51, 234, 0.1)",
+      border: "2px solid rgba(147, 51, 234, 0.8)",
     },
     click: {
       x: mousePosition.x - 16,
       y: mousePosition.y - 16,
       height: 32,
       width: 32,
-      backgroundColor: "rgba(233, 30, 99, 0.4)",
-      border: "2px solid rgba(233, 30, 99, 0)",
-      mixBlendMode: "normal" as const,
+      backgroundColor: "rgba(236, 72, 153, 0.4)",
+      border: "2px solid rgba(236, 72, 153, 0)",
     },
   }
 
@@ -154,20 +149,20 @@ export default function CustomCursor() {
     },
   }
 
-  // Only show on non-touch devices
-  if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
-    return null
-  }
-
   if (!isVisible) return null
 
   return (
     <>
+      <style jsx global>{`
+      @media (pointer: coarse) {
+        .cursor-dot, .cursor { display: none !important; }
+      }
+    `}</style>
       {/* Cursor trails */}
       {trailPositions.map((pos, i) => (
         <motion.div
           key={i}
-          className="fixed top-0 left-0 rounded-full pointer-events-none z-50"
+          className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999]"
           animate={{
             x: pos.x - 3,
             y: pos.y - 3,
@@ -178,14 +173,14 @@ export default function CustomCursor() {
           style={{
             width: 6,
             height: 6,
-            backgroundColor: `rgba(156, 39, 176, ${0.5 - i * 0.08})`,
+            backgroundColor: `rgba(147, 51, 234, ${0.5 - i * 0.08})`, // Purple
           }}
         />
       ))}
 
       {/* Main cursor dot */}
       <motion.div
-        className="cursor-dot fixed top-0 left-0 rounded-full pointer-events-none z-50"
+        className="cursor-dot fixed top-0 left-0 rounded-full pointer-events-none z-[9999] bg-purple-600 mix-blend-normal"
         variants={dotVariants}
         animate={cursorVariant}
         transition={{
@@ -198,7 +193,7 @@ export default function CustomCursor() {
 
       {/* Cursor ring */}
       <motion.div
-        className="cursor fixed top-0 left-0 rounded-full pointer-events-none z-50"
+        className="cursor fixed top-0 left-0 rounded-full pointer-events-none z-[9999] border-2 border-purple-500 mix-blend-normal"
         variants={variants}
         animate={cursorVariant}
         transition={{

@@ -4,24 +4,13 @@ import { motion } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef, useState } from "react"
 import WaveBackground from "./wave-background"
-import { Code, Server, Database, FileCode, Github, Layers, Palette, Smartphone, Cloud, Globe } from "lucide-react"
+import { Code } from "lucide-react"
 
-// Updated skills data with circular progress approach
-const technicalSkills = [
-  { name: "JavaScript", level: 90, icon: <Code className="h-8 w-8" />, color: "#f7df1e" },
-  { name: "TypeScript", level: 85, icon: <FileCode className="h-8 w-8" />, color: "#3178c6" },
-  { name: "React", level: 88, icon: <Layers className="h-8 w-8" />, color: "#61dafb" },
-  { name: "Next.js", level: 82, icon: <Globe className="h-8 w-8" />, color: "#000000" },
-  { name: "Node.js", level: 80, icon: <Server className="h-8 w-8" />, color: "#339933" },
-  { name: "MongoDB", level: 75, icon: <Database className="h-8 w-8" />, color: "#47a248" },
-  { name: "Git", level: 85, icon: <Github className="h-8 w-8" />, color: "#f05032" },
-  { name: "UI/UX", level: 78, icon: <Palette className="h-8 w-8" />, color: "#ff6b6b" },
-  { name: "Mobile Dev", level: 70, icon: <Smartphone className="h-8 w-8" />, color: "#4ecdc4" },
-  { name: "DevOps", level: 72, icon: <Cloud className="h-8 w-8" />, color: "#326ce5" },
-]
+import { SkillItem } from "@/lib/data"
+import { IconMap } from "@/lib/icons"
 
-// Circular progress component without percentage display
-const CircularProgress = ({ percentage, color, size = 120 }: { percentage: number; color: string; size?: number }) => {
+// Circular progress component
+const CircularProgress = ({ percentage, color, size = 120, icon: Icon, iconColor }: { percentage: number; color: string; size?: number; icon: any; iconColor: string }) => {
   const radius = (size - 20) / 2
   const circumference = 2 * Math.PI * radius
   const strokeDasharray = circumference
@@ -57,15 +46,18 @@ const CircularProgress = ({ percentage, color, size = 120 }: { percentage: numbe
       </svg>
       {/* Center icon instead of percentage */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div style={{ color }}>{technicalSkills.find((s) => s.color === color)?.icon}</div>
+        <div style={{ color: iconColor }}>
+          {Icon && <Icon className="h-8 w-8" />}
+        </div>
       </div>
     </div>
   )
 }
 
 // Skill card component
-const SkillCard = ({ skill, index, isInView }: { skill: any; index: number; isInView: boolean }) => {
+const SkillCard = ({ skill, index, isInView }: { skill: SkillItem; index: number; isInView: boolean }) => {
   const [isHovered, setIsHovered] = useState(false)
+  const Icon = IconMap[skill.iconName] || Code
 
   return (
     <motion.div
@@ -98,7 +90,7 @@ const SkillCard = ({ skill, index, isInView }: { skill: any; index: number; isIn
 
         {/* Circular progress */}
         <div className="mb-4">
-          <CircularProgress percentage={skill.level} color={skill.color} size={100} />
+          <CircularProgress percentage={skill.level} color={skill.color} size={100} icon={Icon} iconColor={skill.color} />
         </div>
 
         {/* Skill level text */}
@@ -120,7 +112,7 @@ const SkillCard = ({ skill, index, isInView }: { skill: any; index: number; isIn
   )
 }
 
-export default function Skills() {
+export default function Skills({ skills }: { skills: SkillItem[] }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
@@ -156,7 +148,7 @@ export default function Skills() {
 
         {/* Skills grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {technicalSkills.map((skill, index) => (
+          {skills && skills.map((skill, index) => (
             <SkillCard key={skill.name} skill={skill} index={index} isInView={isInView} />
           ))}
         </div>
