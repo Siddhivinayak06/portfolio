@@ -7,6 +7,7 @@ import {
   GraduationCap,
   ArrowUpRight,
   LucideIcon,
+  Mail
 } from "lucide-react"
 
 /** ✅ Explicit icon registry */
@@ -14,6 +15,7 @@ const ICONS = {
   Briefcase,
   Code,
   GraduationCap,
+  Mail
 } satisfies Record<string, LucideIcon>
 
 type IconName = keyof typeof ICONS
@@ -33,7 +35,7 @@ interface DashboardGridProps {
 
 export default function DashboardGrid({ stats }: DashboardGridProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => {
         /** ✅ Guaranteed React component */
         const IconComponent: LucideIcon = ICONS[stat.icon]
@@ -61,7 +63,7 @@ export default function DashboardGrid({ stats }: DashboardGridProps) {
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
                     {stat.name}
                   </p>
-                  <h3 className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">
+                  <h3 className="mt-1 text-2xl font-bold text-gray-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-gray-400">
                     {stat.value}
                   </h3>
                 </div>

@@ -8,8 +8,9 @@ import { ArrowLeft, Github, Globe } from "lucide-react"
 
 export const dynamic = 'force-dynamic'
 
-export default async function ProjectPage({ params }: { params: { id: string } }) {
-    const project = await getProjectById(params.id)
+export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
+    const project = await getProjectById(id)
 
     if (!project) {
         notFound()

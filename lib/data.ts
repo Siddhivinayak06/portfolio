@@ -158,3 +158,72 @@ export async function getEducationById(id: string): Promise<EducationItem | null
         return null
     }
 }
+
+export interface MessageItem {
+    _id: string
+    name: string
+    email: string
+    subject: string
+    message: string
+    createdAt: string
+}
+
+export async function getMessages(): Promise<MessageItem[]> {
+    try {
+        const client = await clientPromise
+        const db = client.db("portfolio")
+        const messages = await db.collection("messages").find({}).sort({ createdAt: -1 }).toArray()
+        return messages.map(msg => ({
+            _id: msg._id.toString(),
+            name: msg.name,
+            email: msg.email,
+            subject: msg.subject,
+            message: msg.message,
+            createdAt: msg.createdAt
+        })) as MessageItem[]
+    } catch (error) {
+        console.error("Failed to fetch messages:", error)
+        return []
+    }
+}
+
+export async function getRecentMessages(limit = 3): Promise<MessageItem[]> {
+    try {
+        const client = await clientPromise
+        const db = client.db("portfolio")
+        const messages = await db.collection("messages").find({}).sort({ createdAt: -1 }).limit(limit).toArray()
+        return messages.map(msg => ({
+            _id: msg._id.toString(),
+            name: msg.name,
+            email: msg.email,
+            subject: msg.subject,
+            message: msg.message,
+            createdAt: msg.createdAt
+        })) as MessageItem[]
+    } catch (error) {
+        console.error("Failed to fetch recent messages:", error)
+        return []
+    }
+}
+
+export async function getRecentProjects(limit = 3): Promise<ProjectItem[]> {
+    try {
+        const client = await clientPromise
+        const db = client.db("portfolio")
+        const projects = await db.collection("projects").find({}).sort({ _id: -1 }).limit(limit).toArray()
+        return projects.map((project) => ({
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            image: project.image,
+            tags: project.tags,
+            liveUrl: project.liveUrl,
+            githubUrl: project.githubUrl,
+            iconName: project.iconName,
+            color: project.color,
+        })) as ProjectItem[]
+    } catch (error) {
+        console.error("Failed to fetch recent projects:", error)
+        return []
+    }
+}
