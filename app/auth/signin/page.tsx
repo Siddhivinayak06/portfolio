@@ -16,16 +16,27 @@ export default function SignIn() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        const res = await signIn("credentials", {
-            username,
-            password,
-            redirect: false,
-        })
+        setError("")
 
-        if (res?.error) {
-            setError("Invalid credentials")
-        } else {
-            router.push("/admin")
+        try {
+            console.log("Attempting sign in...")
+            const res = await signIn("credentials", {
+                username,
+                password,
+                redirect: false,
+            })
+
+            console.log("Sign in result:", res)
+
+            if (res?.error) {
+                setError(res.error === "CredentialsSignin" ? "Invalid username or password" : res.error)
+            } else if (res?.ok) {
+                router.push("/admin")
+                router.refresh()
+            }
+        } catch (err) {
+            console.error("Sign in catch error:", err)
+            setError("An unexpected error occurred")
         }
     }
 
