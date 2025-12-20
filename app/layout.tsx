@@ -45,15 +45,16 @@ export const metadata: Metadata = {
 }
 
 import CustomCursor from "@/components/custom-cursor"
+import { Providers } from "@/components/providers"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} cursor-active`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Providers>
           <CustomCursor />
           {children}
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   )
