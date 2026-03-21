@@ -82,8 +82,8 @@ export default function Contact() {
 
     // Simple validation to check if they are dummy values or missing
     const isConfigured =
-      serviceId && !serviceId.includes("service_123") &&
-      templateId && !templateId.includes("template_123") &&
+      serviceId && serviceId !== "service_123456" &&
+      templateId && templateId !== "template_123456" &&
       publicKey
 
     if (!isConfigured) {
