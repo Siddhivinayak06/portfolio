@@ -377,7 +377,7 @@ export default function Hero() {
                 className="border-gray-300 text-gray-700 dark:text-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
                 asChild
               >
-                <a href="/cv.pdf" download="CV.pdf" className="inline-flex items-center">
+                <a href="/Resume.pdf" download="Resume.pdf" className="inline-flex items-center">
                   <Download className="h-4 w-4 mr-2" />
                   Download Resume
                 </a>
