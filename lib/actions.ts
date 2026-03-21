@@ -3,11 +3,16 @@
 import clientPromise from "./mongodb"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
+import { authOptions } from "./auth"
 import { ProjectItem, SkillItem } from "./data"
 
 // --- PROJECTS ---
 
 export async function createProject(formData: FormData) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
 
@@ -35,6 +40,9 @@ export async function createProject(formData: FormData) {
 }
 
 export async function updateProject(id: number, formData: FormData) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
 
@@ -57,6 +65,9 @@ export async function updateProject(id: number, formData: FormData) {
 }
 
 export async function deleteProject(id: number) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
     await db.collection("projects").deleteOne({ id: id })
@@ -67,6 +78,9 @@ export async function deleteProject(id: number) {
 // --- SKILLS ---
 
 export async function createSkill(formData: FormData) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
 
@@ -84,6 +98,9 @@ export async function createSkill(formData: FormData) {
 }
 
 export async function deleteSkill(name: string) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
     await db.collection("skills").deleteOne({ name: name })
@@ -92,6 +109,9 @@ export async function deleteSkill(name: string) {
 }
 
 export async function updateSkill(originalName: string, formData: FormData) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
 
@@ -113,6 +133,9 @@ export async function updateSkill(originalName: string, formData: FormData) {
 // --- EDUCATION ---
 
 export async function createEducation(formData: FormData) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
 
@@ -136,6 +159,9 @@ export async function createEducation(formData: FormData) {
 }
 
 export async function updateEducation(id: number, formData: FormData) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
 
@@ -155,6 +181,9 @@ export async function updateEducation(id: number, formData: FormData) {
 }
 
 export async function deleteEducation(id: number) {
+    const session = await getServerSession(authOptions)
+    if (!session) throw new Error("Unauthorized")
+
     const client = await clientPromise
     const db = client.db("portfolio")
     await db.collection("education").deleteOne({ id: id })
